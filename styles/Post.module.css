@@ -1,0 +1,38 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+}
+
+.container section {
+    width: 80%;
+    margin-right: 1rem;
+}
+
+.container aside {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    min-width: 250px;
+    text-align: center;
+    position: sticky;
+    top: 80px;
+    height: 0;
+    min-height: 300px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+     }
+
+    .container section {
+        width: 100%;
+    }
+    
+    .container aside {
+        width: 100%;
+        position: relative;
+    }
+}
