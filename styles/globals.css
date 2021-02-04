@@ -7,7 +7,6 @@
   --color-red: #df3b3b;
   --color-green: #3bdf72;
   --color-gray: #b5bdc4;
-  /* --color-gray: #64707d; */
 }
 html,
 body {
@@ -16,8 +15,10 @@ body {
   font-family: 'Noto Sans', sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
-  padding-top: 70px;
+  margin-top: 50px;
 }
+
+
 
 main {
   padding: 1rem 10vw;
@@ -52,6 +53,10 @@ fieldset {
   border: none;
   padding: 1rem 0;
   font-size: 1.25rem;
+}
+
+code {
+  overflow-x: scroll;
 }
 
 /* Navbar */
@@ -109,6 +114,14 @@ fieldset {
   cursor: pointer;
   margin: 0.5rem 1rem 0.5rem 0;
 }
+
+@media only screen and (max-width: 768px) {
+  button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
 
 button:hover {
   filter: brightness(90%);
@@ -173,6 +186,11 @@ button.btn-logo {
   margin:auto;
   border-radius: 50%;
   max-width: 150px;
+}
+
+.card-info {
+  color: white;
+  background: var(--color-blue);
 }
 
 /* Loader */

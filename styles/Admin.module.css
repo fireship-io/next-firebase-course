@@ -1,68 +1,66 @@
 .container {
-    min-height: 100vh;
-    display: flex;
+  min-height: 100vh;
+  display: flex;
 }
 
 .container section {
-    width: 60vw;
-    margin-right: 1rem;
+  width: 60vw;
+  margin-right: 1rem;
 }
 
 .container aside {
-    display: flex;
-    flex-direction: column;
-    width: 20%;
-    min-width: 250px;
-    text-align: center;
-    position: sticky;
-    top: 80px;
-    height: 0;
-    min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  min-width: 250px;
+  min-height: 200px;
+  text-align: center;
+  position: sticky;
+  top: 80px;
+  height: 0;
 }
 
-.hidden { display:  none; }
+.hidden {
+  display: none;
+}
 
 .controls {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .controls textarea {
-    height: 60vh;
-    border: none;
-    outline: none;
-    padding: 0.5rem;
-    font-size: 1.25rem;
+  height: 60vh;
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  font-size: 1.25rem;
 }
 
 .input {
-    outline: none;
-    border: none;
-    font-size: 2.5rem;
-    width: 100%;
-    padding: 5px 10px;
+  outline: none;
+  border: none;
+  font-size: 2.5rem;
+  width: 100%;
+  padding: 5px 10px;
 }
 
 .checkbox {
-    display: inline;
-    width: auto;
+  display: inline;
+  width: auto;
 }
 
-
-
-
-
 @media only screen and (max-width: 768px) {
-    .container {
-        flex-direction: column;
-     }
+  .container {
+    flex-direction: column;
+  }
 
-    .container section {
-        width: 100%;
-    }
-    
-    .container aside {
-        width: 100%;
-        position: relative;
-    }
+  .container section {
+    width: 100%;
+  }
+
+  .container aside {
+    width: 100%;
+    position: relative;
+  }
 }

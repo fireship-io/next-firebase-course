@@ -2,7 +2,7 @@ import styles from '../../styles/Post.module.css';
 import PostContent from '../../components/PostContent';
 import HeartButton from '../../components/HeartButton';
 import AuthCheck from '../../components/AuthCheck';
-import MetaTags from '../../components/Metatags';
+import Metatags from '../../components/Metatags';
 import { UserContext } from '../../lib/context';
 import { firestore, getUserWithUsername, postToJSON } from '../../lib/firebase';
 
@@ -61,7 +61,7 @@ export default function Post(props) {
 
   return (
     <main className={styles.container}>
-      <MetaTags title={post.title} description={post.title} />
+      <Metatags title={post.title} description={post.title} />
       
       <section>
         <PostContent post={post} />
