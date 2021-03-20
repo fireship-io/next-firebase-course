@@ -1,9 +1,9 @@
-import styles from '../../styles/Post.module.css';
-import PostContent from '../../components/PostContent';
-import HeartButton from '../../components/HeartButton';
-import AuthCheck from '../../components/AuthCheck';
-import Metatags from '../../components/Metatags';
-import { UserContext } from '../../lib/context';
+import styles from '@styles/Post.module.css';
+import PostContent from '@components/PostContent';
+import HeartButton from '@components/HeartButton';
+import AuthCheck from '@components/AuthCheck';
+import Metatags from '@components/Metatags';
+import { UserContext } from '@lib/context';
 import { firestore, getUserWithUsername, postToJSON } from '../../lib/firebase';
 
 import Link from 'next/link';

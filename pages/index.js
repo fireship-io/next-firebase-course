@@ -1,7 +1,7 @@
-import PostFeed from '../components/PostFeed';
-import Metatags from '../components/Metatags';
-import Loader from '../components/Loader';
-import { firestore, fromMillis, postToJSON } from '../lib/firebase';
+import PostFeed from '@components/PostFeed';
+import Metatags from '@components/Metatags';
+import Loader from '@components/Loader';
+import { firestore, fromMillis, postToJSON } from '@lib/firebase';
 
 import { useState } from 'react';
 
