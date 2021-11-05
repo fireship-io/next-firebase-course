@@ -65,7 +65,7 @@ code {
   height: 70px;
   width: 100%;
   background: white;
-  color: var(--colors-text);
+  color: var(--color-text);
   position: fixed;
   top: 0;
   padding: 0 10vw;
