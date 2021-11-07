@@ -64,7 +64,7 @@ export default function Home(props) {
      
       <PostFeed posts={posts} />
 
-      {!loading && !postsEnd && <button onClick={getMorePosts}>Load more</button>}
+      {posts.length === 0 ? ('Your application has no posts yet') : (!loading && !postsEnd && <button onClick={getMorePosts}>Load more</button>)}
 
       <Loader show={loading} />
 
