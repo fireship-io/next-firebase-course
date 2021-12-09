@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { auth, storage, STATE_CHANGED } from '@lib/firebase';
 import Loader from './Loader';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 // Uploads images to Firebase Storage
 export default function ImageUploader() {
@@ -15,11 +16,11 @@ export default function ImageUploader() {
     const extension = file.type.split('/')[1];
 
     // Makes reference to the storage bucket location
-    const ref = storage.ref(`uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`);
+    const fileRef = ref(storage, `uploads/${auth.currentUser.uid}/${Date.now()}.${extension}`);
     setUploading(true);
 
     // Starts the upload
-    const task = ref.put(file);
+    const task = uploadBytesResumable(fileRef, file)
 
     // Listen to updates to upload task
     task.on(STATE_CHANGED, (snapshot) => {
@@ -29,7 +30,7 @@ export default function ImageUploader() {
 
     // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
     task
-      .then((d) => ref.getDownloadURL())
+      .then((d) => getDownloadURL(fileRef))
       .then((url) => {
         setDownloadURL(url);
         setUploading(false);

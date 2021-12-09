@@ -1,4 +1,6 @@
 import { auth, firestore, googleAuthProvider } from '@lib/firebase';
+import { doc, writeBatch, getDoc, getFirestore } from 'firebase/firestore';
+import { signInWithPopup, signInAnonymously, signOut } from 'firebase/auth';
 import { UserContext } from '@lib/context';
 import Metatags from '@components/Metatags';
 
@@ -22,7 +24,7 @@ export default function Enter(props) {
 // Sign in with Google button
 function SignInButton() {
   const signInWithGoogle = async () => {
-    await auth.signInWithPopup(googleAuthProvider);
+    await signInWithPopup(auth, googleAuthProvider)
   };
 
   return (
@@ -30,7 +32,7 @@ function SignInButton() {
       <button className="btn-google" onClick={signInWithGoogle}>
         <img src={'/google.png'} width="30px" /> Sign in with Google
       </button>
-      <button onClick={() => auth.signInAnonymously()}>
+      <button onClick={() => signInAnonymously(auth)}>
         Sign in Anonymously
       </button>
     </>
@@ -39,7 +41,7 @@ function SignInButton() {
 
 // Sign out button
 function SignOutButton() {
-  return <button onClick={() => auth.signOut()}>Sign Out</button>;
+  return <button onClick={() => signOut(auth)}>Sign Out</button>;
 }
 
 // Username form
@@ -54,11 +56,11 @@ function UsernameForm() {
     e.preventDefault();
 
     // Create refs for both documents
-    const userDoc = firestore.doc(`users/${user.uid}`);
-    const usernameDoc = firestore.doc(`usernames/${formValue}`);
+    const userDoc = doc(getFirestore(), 'users', user.uid);
+    const usernameDoc = doc(getFirestore(), 'usernames', formValue);
 
     // Commit both docs together as a batch write.
-    const batch = firestore.batch();
+    const batch = writeBatch(getFirestore());
     batch.set(userDoc, { username: formValue, photoURL: user.photoURL, displayName: user.displayName });
     batch.set(usernameDoc, { uid: user.uid });
 
@@ -95,10 +97,10 @@ function UsernameForm() {
   const checkUsername = useCallback(
     debounce(async (username) => {
       if (username.length >= 3) {
-        const ref = firestore.doc(`usernames/${username}`);
-        const { exists } = await ref.get();
-        console.log('Firestore read executed!');
-        setIsValid(!exists);
+        const ref = doc(getFirestore(), 'usernames', username);
+        const snap = await getDoc(ref);
+        console.log('Firestore read executed!', snap.exists());
+        setIsValid(!snap.exists());
         setLoading(false);
       }
     }, 500),

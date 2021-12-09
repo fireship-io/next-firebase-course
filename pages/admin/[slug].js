@@ -1,6 +1,7 @@
 import styles from '@styles/Admin.module.css';
 import AuthCheck from '@components/AuthCheck';
-import { firestore, auth, serverTimestamp } from '@lib/firebase';
+import { firestore, auth } from '@lib/firebase';
+import { serverTimestamp, doc, deleteDoc, updateDoc, getFirestore } from 'firebase/firestore';
 import ImageUploader from '@components/ImageUploader';
 
 import { useState } from 'react';
@@ -26,7 +27,8 @@ function PostManager() {
   const router = useRouter();
   const { slug } = router.query;
 
-  const postRef = firestore.collection('users').doc(auth.currentUser.uid).collection('posts').doc(slug);
+  // const postRef = firestore.collection('users').doc(auth.currentUser.uid).collection('posts').doc(slug);
+  const postRef = doc(getFirestore(), 'users', auth.currentUser.uid, 'posts', slug)
   const [post] = useDocumentDataOnce(postRef);
 
   return (
@@ -60,7 +62,7 @@ function PostForm({ defaultValues, postRef, preview }) {
   const { isValid, isDirty } = formState;
 
   const updatePost = async ({ content, published }) => {
-    await postRef.update({
+    await updateDoc(postRef, {
       content,
       published,
       updatedAt: serverTimestamp(),
@@ -112,7 +114,7 @@ function DeletePostButton({ postRef }) {
   const deletePost = async () => {
     const doIt = confirm('are you sure!');
     if (doIt) {
-      await postRef.delete();
+      await deleteDoc(postRef);
       router.push('/admin');
       toast('post annihilated ', { icon: '🗑️' });
     }
