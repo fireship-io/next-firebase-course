@@ -28,7 +28,7 @@ export default function Heart({ postRef }) {
     await batch.commit();
   };
 
-  return heartDoc?.exists ? (
+  return heartDoc?.exists() ? (
     <button onClick={removeHeart}>💔 Unheart</button>
   ) : (
     <button onClick={addHeart}>💗 Heart</button>
