@@ -4,6 +4,8 @@ export default function PostFeed({ posts, admin }) {
   return posts ? posts.map((post) => <PostItem post={post} key={post.slug} admin={admin} />) : null;
 }
 
+
+//Singular Pot Comopnent
 function PostItem({ post, admin = false }) {
   // Naive method to calc word count and read time
   const wordCount = post?.content.trim().split(/\s+/g).length;
