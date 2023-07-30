@@ -1,4 +1,6 @@
 import { auth, firestore, googleAuthProvider } from '@lib/firebase';
+import { signInWithPopup, signInAnonymously } from "@firebase/auth";
+import { doc, getDoc, writeBatch } from "firebase/firestore";
 import { UserContext } from '@lib/context';
 import Metatags from '@components/Metatags';
 
@@ -22,15 +24,18 @@ export default function Enter(props) {
 // Sign in with Google button
 function SignInButton() {
   const signInWithGoogle = async () => {
-    await auth.signInWithPopup(googleAuthProvider);
+    // TODO add error handling
+    await signInWithPopup(auth, googleAuthProvider);
+    // TODO This looks a bit old, see https://firebase.google.com/docs/auth/web/google-signin for more current method
+    // Example: https://github.com/firebase/snippets-web/blob/88aa8eb8210c90263eef7fe1f454cd6477a5a252/snippets/auth-next/google-signin/auth_google_signin_redirect_result.js#L8-L30
   };
 
   return (
     <>
-      <button className="btn-google" onClick={signInWithGoogle}>
+      <button className="btn-google" onClick={async () => await signInWithPopup(auth, googleAuthProvider)}>
         <img src={'/google.png'} width="30px" /> Sign in with Google
       </button>
-      <button onClick={() => auth.signInAnonymously()}>
+      <button onClick={ async () => await signInAnonymously(auth)}>
         Sign in Anonymously
       </button>
     </>
@@ -54,12 +59,12 @@ function UsernameForm() {
     e.preventDefault();
 
     // Create refs for both documents
-    const userDoc = firestore.doc(`users/${user.uid}`);
-    const usernameDoc = firestore.doc(`usernames/${formValue}`);
+    const userDoc = doc(firestore, `users/${user.uid}`);
+    const usernameDoc = doc(firestore, `usernames/${formValue}`);
 
     // Commit both docs together as a batch write.
-    const batch = firestore.batch();
-    batch.set(userDoc, { username: formValue, photoURL: user.photoURL, displayName: user.displayName });
+    const batch = writeBatch(firestore);
+    batch.set(userDoc, { username: formValue, photoURL: user.photoURL, displayName: user.displayName, });
     batch.set(usernameDoc, { uid: user.uid });
 
     await batch.commit();
@@ -95,10 +100,9 @@ function UsernameForm() {
   const checkUsername = useCallback(
     debounce(async (username) => {
       if (username.length >= 3) {
-        const ref = firestore.doc(`usernames/${username}`);
-        const { exists } = await ref.get();
-        console.log('Firestore read executed!');
-        setIsValid(!exists);
+        const docRef = doc(firestore, `usernames/${username}`);
+        const ref = await getDoc(docRef);
+        setIsValid(!ref.exists());
         setLoading(false);
       }
     }, 500),
