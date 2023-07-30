@@ -1,6 +1,6 @@
 import styles from '@styles/Admin.module.css';
 import AuthCheck from '@components/AuthCheck';
-import { firestore, auth, serverTimestamp } from '@lib/firebase';
+import { firestore, auth } from '@lib/firebase';
 import ImageUploader from '@components/ImageUploader';
 
 import { useState } from 'react';
@@ -11,6 +11,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { collection, doc, serverTimestamp, updateDoc, deleteDoc } from "firebase/firestore";
 
 export default function AdminPostEdit(props) {
   return (
@@ -26,7 +27,8 @@ function PostManager() {
   const router = useRouter();
   const { slug } = router.query;
 
-  const postRef = firestore.collection('users').doc(auth.currentUser.uid).collection('posts').doc(slug);
+  const postRef = doc(collection(firestore, "users", auth.currentUser.uid, "posts"), slug);
+  // TODO Look into using useDocumentDataOnce since we only need original data on initial load
   const [post] = useDocumentDataOnce(postRef);
 
   return (
@@ -62,7 +64,7 @@ function PostForm({ defaultValues, postRef, preview }) {
   });
 
   const updatePost = async ({ content, published }) => {
-    await postRef.update({
+    await updateDoc(postRef, {
       content,
       published,
       updatedAt: serverTimestamp(),
@@ -113,7 +115,10 @@ function DeletePostButton({ postRef }) {
   const deletePost = async () => {
     const doIt = confirm('are you sure!');
     if (doIt) {
-      await postRef.delete();
+      // TODO firebase docs mention that a delete doesn't delete subcollections https://firebase.google.com/docs/firestore/manage-data/delete-data#delete_documents
+      // hearts subcollection probably still needs to be deleted
+      // TODO Consider checking the post for an uploaded image and remove it from storage bucket as well?
+      await deleteDoc(postRef);
       router.push('/admin');
       toast('post annihilated ', { icon: '🗑️' });
     }

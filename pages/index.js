@@ -1,7 +1,8 @@
 import PostFeed from '@components/PostFeed';
 import Metatags from '@components/Metatags';
 import Loader from '@components/Loader';
-import { firestore, fromMillis, postToJSON } from '@lib/firebase';
+import { firestore, postToJSON } from '@lib/firebase';
+import { Timestamp, collectionGroup, getDocs, limit, orderBy, query, startAfter, where } from "firebase/firestore";
 
 import { useState } from 'react';
 
@@ -9,13 +10,14 @@ import { useState } from 'react';
 const LIMIT = 10;
 
 export async function getServerSideProps(context) {
-  const postsQuery = firestore
-    .collectionGroup('posts')
-    .where('published', '==', true)
-    .orderBy('createdAt', 'desc')
-    .limit(LIMIT);
+  const postsQuery = query(
+    collectionGroup(firestore, 'posts'),
+    where('published', '==', true),
+    orderBy('createdAt', 'desc'),
+    limit(LIMIT)
+  );
 
-  const posts = (await postsQuery.get()).docs.map(postToJSON);
+  const posts = (await getDocs(postsQuery)).docs.map(postToJSON);
 
   return {
     props: { posts }, // will be passed to the page component as props
@@ -33,16 +35,17 @@ export default function Home(props) {
     setLoading(true);
     const last = posts[posts.length - 1];
 
-    const cursor = typeof last.createdAt === 'number' ? fromMillis(last.createdAt) : last.createdAt;
+    const cursor = typeof last.createdAt === 'number' ? Timestamp.fromMillis(last.createdAt) : last.createdAt;
 
-    const query = firestore
-      .collectionGroup('posts')
-      .where('published', '==', true)
-      .orderBy('createdAt', 'desc')
-      .startAfter(cursor)
-      .limit(LIMIT);
+    const postsQuery = query(
+      collectionGroup(firestore, 'posts'),
+      where('published', '==', true),
+      orderBy('createdAt', 'desc'),
+      startAfter(cursor),
+      limit(LIMIT)
+    );
 
-    const newPosts = (await query.get()).docs.map((doc) => doc.data());
+    const newPosts = (await getDocs(postsQuery)).docs.map((doc) => doc.data() );
 
     setPosts(posts.concat(newPosts));
     setLoading(false);
