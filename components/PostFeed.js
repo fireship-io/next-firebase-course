@@ -11,13 +11,13 @@ function PostItem({ post, admin = false }) {
 
   return (
     <div className="card">
-      <Link href={`/${post.username}`}>
+      <Link legacyBehavior href={`/${post.username}`}>
         <a>
           <strong>By @{post.username}</strong>
         </a>
       </Link>
 
-      <Link href={`/${post.username}/${post.slug}`}>
+      <Link legacyBehavior href={`/${post.username}/${post.slug}`}>
         <h2>
           <a>{post.title}</a>
         </h2>
@@ -33,7 +33,7 @@ function PostItem({ post, admin = false }) {
       {/* If admin view, show extra controls for user */}
       {admin && (
         <>
-          <Link href={`/admin/${post.slug}`}>
+          <Link legacyBehavior href={`/admin/${post.slug}`}>
             <h3>
               <button className="btn-blue">Edit</button>
             </h3>

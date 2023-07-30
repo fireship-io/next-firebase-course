@@ -74,7 +74,7 @@ export default function Post(props) {
 
         <AuthCheck
           fallback={
-            <Link href="/enter">
+            <Link legacyBehavior href="/enter">
               <button>💗 Sign Up</button>
             </Link>
           }
@@ -83,7 +83,7 @@ export default function Post(props) {
         </AuthCheck>
 
         {currentUser?.uid === post.uid && (
-          <Link href={`/admin/${post.slug}`}>
+          <Link legacyBehavior href={`/admin/${post.slug}`}>
             <button className="btn-blue">Edit Post</button>
           </Link>
         )}
